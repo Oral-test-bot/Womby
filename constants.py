@@ -1,0 +1,1 @@
+PROMPT_PATH = "./static/instructions_prompt.txt"

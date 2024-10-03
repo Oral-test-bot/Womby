@@ -1,5 +1,11 @@
 import streamlit as st
 from openai import OpenAI
+from constants import PROMPT_PATH
+
+# Get the prompt with instructions
+instructions_prompt = ""
+with open(PROMPT_PATH) as reader:
+    instructions_prompt = reader.read()
 
 # Show title and description.
 st.title("💬 Chatbot")
@@ -23,10 +29,10 @@ else:
     # Create a session state variable to store the chat messages. This ensures that the
     # messages persist across reruns.
     if "messages" not in st.session_state:
-        st.session_state.messages = []
+        st.session_state.messages = [{"role": "user", "content": instructions_prompt}]
 
     # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
+    for message in st.session_state.messages[1:]:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
