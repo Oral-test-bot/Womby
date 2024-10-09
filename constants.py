@@ -1,1 +1,2 @@
-PROMPT_PATH = "./static/instructions_prompt.txt"
+PROMPTS_PATH = "./static/prompts"
+COURSES_INFO_PATH = "./static/curse_info.json"

@@ -1,0 +1,10 @@
+{
+    "Nivel 1": {
+        "unidad_1": ["¿Cómo te llamas?", "¿De dónde eres?"],
+        "unidad_2": ["¿Qué edad tienes?", "¿Qué te gusta hacer?"]
+    },
+    "Nivel 2": {
+        "unidad_1": ["Describe tu rutina diaria.", "¿Qué haces los fines de semana?"],
+        "unidad_2": ["Háblame de tu familia.", "¿Qué trabajo te gustaría tener?"]
+    }
+}
