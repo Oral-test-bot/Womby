@@ -32,11 +32,14 @@ else:
             "Selecciona un prompt inicial", prompt_files, index=0
         )
 
-        with open(os.path.join(PROMPTS_PATH, prompt_choice), "r") as prompt_file:
+        # Abrir el archivo con codificación UTF-8
+        with open(
+            os.path.join(PROMPTS_PATH, prompt_choice), "r", encoding="utf-8"
+        ) as prompt_file:
             instructions_prompt = prompt_file.read()
 
         # Cargar JSON de los niveles, unidades y preguntas
-        with open(COURSES_INFO_PATH, "r") as courses_info_file:
+        with open(COURSES_INFO_PATH, "r", encoding="utf-8") as courses_info_file:
             cursos_data = json.load(courses_info_file)
 
         # Selector de nivel
@@ -52,12 +55,13 @@ else:
         pregunta = st.selectbox("Selecciona una pregunta", preguntas)
 
     # Concatenar el prompt inicial con la pregunta seleccionada
-    instructions_prompt += f"\n\nPregunta a responder: {pregunta}\nRespuesta:"
+    prompt_context = f"{instructions_prompt.strip()}\n\n"
+    template_user_answer = "Pregunta: {pregunta}\nRespuesta:{respuesta}"
 
     # Create a session state variable to store the chat messages. This ensures that the
     # messages persist across reruns.
     if "messages" not in st.session_state:
-        st.session_state.messages = [{"role": "user", "content": instructions_prompt}]
+        st.session_state.messages = [{"role": "user", "content": prompt_context}]
 
     # Display the existing chat messages via `st.chat_message`.
     for message in st.session_state.messages[1:]:
@@ -68,10 +72,19 @@ else:
     # automatically at the bottom of the page.
     if prompt := st.chat_input("What is up?"):
 
+        user_answer = template_user_answer.format(pregunta=pregunta, respuesta=prompt)
+
         # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
+        st.session_state.messages.append({"role": "user", "content": user_answer})
         with st.chat_message("user"):
             st.markdown(prompt)
+
+        # Mostrar los mensajes para depuración
+        messages_test = [
+            {"role": m["role"], "content": m["content"]}
+            for m in st.session_state.messages
+        ]
+        print(messages_test)
 
         # Generate a response using the OpenAI API.
         stream = client.chat.completions.create(
@@ -83,8 +96,7 @@ else:
             stream=True,
         )
 
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
+        # Mostrar la respuesta del asistente
         with st.chat_message("assistant"):
             response = st.write_stream(stream)
         st.session_state.messages.append({"role": "assistant", "content": response})
