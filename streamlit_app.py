@@ -108,7 +108,7 @@ else:
     # Si hay respuesta de voz, se muestra la transcripción
     if voice_response:
         st.write("Transcripción:")
-        text = transcriptor.vosk_to_text(voice_response)
+        text = transcriptor.to_text(voice_response, client)
         st.write(text)
 
         
