@@ -1,8 +1,10 @@
+from pyexpat import model
 import streamlit as st
 from openai import OpenAI
 from constants import PROMPTS_PATH, COURSES_INFO_PATH
 import json
 import os
+from VoiceRecognition import VoiceRecognition
 
 # Show title and description.
 st.title("💬 Chatbot")
@@ -84,7 +86,6 @@ else:
             {"role": m["role"], "content": m["content"]}
             for m in st.session_state.messages
         ]
-        print(messages_test)
 
         # Generate a response using the OpenAI API.
         stream = client.chat.completions.create(
@@ -100,3 +101,16 @@ else:
         with st.chat_message("assistant"):
             response = st.write_stream(stream)
         st.session_state.messages.append({"role": "assistant", "content": response})
+    
+    # Entrada de audio
+    voice_response = st.experimental_audio_input("Grabar respuesta")
+    transcriptor = VoiceRecognition()
+    # Si hay respuesta de voz, se muestra la transcripción
+    if voice_response:
+        st.write("Transcripción:")
+        text = transcriptor.vosk_to_text(voice_response)
+        st.write(text)
+
+        
+
+
