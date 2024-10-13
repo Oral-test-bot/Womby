@@ -1,11 +1,9 @@
-from pyexpat import model
 import streamlit as st
 from openai import OpenAI
 from constants import PROMPTS_PATH, COURSES_INFO_PATH
 import json
 import os
 from VoiceRecognition import VoiceRecognition
-from dotenv import load_dotenv
 
 st.set_page_config(
     page_title="Womby",
@@ -17,9 +15,6 @@ st.set_page_config(
 # Show title and description.
 st.title("🐨 Womby")
 
-load_dotenv()
-openai_api_key = os.getenv("API_KEY")
-
 
 # Función para agregar un nuevo mensaje y refrescar
 def add_message(role, content):
@@ -30,10 +25,6 @@ def add_message(role, content):
 def add_message_without_rerun(role, content):
     st.session_state.messages.append({"role": role, "content": content})
 
-
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
 
 # Create an OpenAI client.
 client = OpenAI(api_key=st.secrets["API_KEY"])
