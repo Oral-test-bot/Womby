@@ -2,7 +2,6 @@ from pyexpat import model
 import streamlit as st
 from openai import OpenAI
 from constants import PROMPTS_PATH, COURSES_INFO_PATH
-from dotenv import load_dotenv
 import json
 import os
 from VoiceRecognition import VoiceRecognition
@@ -35,39 +34,39 @@ if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 else:
 
-    # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+# Create an OpenAI client.
+client = OpenAI(api_key=st.secrets["API_KEY"])
 
-    # Obtenemos los nombres de los archivos de los prompts
-    prompt_files = os.listdir(PROMPTS_PATH)
+# Obtenemos los nombres de los archivos de los prompts
+prompt_files = os.listdir(PROMPTS_PATH)
 
-    # Cargar el contenido de los prompts y mostrarlo en la barra lateral
-    with st.sidebar:
-        prompt_choice = st.selectbox(
-            "Selecciona un prompt inicial", prompt_files, index=0
-        )
+# Cargar el contenido de los prompts y mostrarlo en la barra lateral
+with st.sidebar:
+    prompt_choice = st.selectbox(
+        "Selecciona un prompt inicial", prompt_files, index=0
+    )
 
-        # Abrir el archivo con codificación UTF-8
-        with open(
-            os.path.join(PROMPTS_PATH, prompt_choice), "r", encoding="utf-8"
-        ) as prompt_file:
-            instructions_prompt = prompt_file.read()
+    # Abrir el archivo con codificación UTF-8
+    with open(
+        os.path.join(PROMPTS_PATH, prompt_choice), "r", encoding="utf-8"
+    ) as prompt_file:
+        instructions_prompt = prompt_file.read()
 
-        # Cargar JSON de los niveles, unidades y preguntas
-        with open(COURSES_INFO_PATH, "r", encoding="utf-8") as courses_info_file:
-            cursos_data = json.load(courses_info_file)
+    # Cargar JSON de los niveles, unidades y preguntas
+    with open(COURSES_INFO_PATH, "r", encoding="utf-8") as courses_info_file:
+        cursos_data = json.load(courses_info_file)
 
-        # Selector de nivel
-        niveles = list(cursos_data.keys())
-        nivel = st.selectbox("Selecciona tu nivel de inglés", niveles)
+    # Selector de nivel
+    niveles = list(cursos_data.keys())
+    nivel = st.selectbox("Selecciona tu nivel de inglés", niveles)
 
-        # Filtrar las unidades según el nivel seleccionado
-        unidades = list(cursos_data[nivel].keys())
-        unidad = st.selectbox("Selecciona tu unidad", unidades)
+    # Filtrar las unidades según el nivel seleccionado
+    unidades = list(cursos_data[nivel].keys())
+    unidad = st.selectbox("Selecciona tu unidad", unidades)
 
-        # Filtrar las preguntas según la unidad seleccionada
-        preguntas = cursos_data[nivel][unidad]
-        pregunta = st.selectbox("Selecciona una pregunta", preguntas)
+    # Filtrar las preguntas según la unidad seleccionada
+    preguntas = cursos_data[nivel][unidad]
+    pregunta = st.selectbox("Selecciona una pregunta", preguntas)
 
     # Concatenar el prompt inicial con la pregunta seleccionada
     prompt_context = f"{instructions_prompt.strip()}\n\n"
