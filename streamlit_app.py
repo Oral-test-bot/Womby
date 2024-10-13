@@ -5,6 +5,7 @@ from constants import PROMPTS_PATH, COURSES_INFO_PATH
 import json
 import os
 from VoiceRecognition import VoiceRecognition
+from dotenv import load_dotenv
 
 st.set_page_config(
     page_title="Womby",
