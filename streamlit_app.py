@@ -7,22 +7,29 @@ import json
 import os
 from VoiceRecognition import VoiceRecognition
 
-
-# Show title and description.
-st.title("💬 Chatbot")
-st.write(
-    "This is a simple chatbot that uses OpenAI's GPT-3.5 model to generate responses. "
-    "To use this app, you need to provide an OpenAI API key, which you can get [here](https://platform.openai.com/account/api-keys). "
-    "You can also learn how to build this app step by step by [following our tutorial](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)."
+st.set_page_config(
+    page_title="Womby",
+    page_icon="🐨",
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-# openai_api_key = st.text_input("OpenAI API Key", type="password")
+# Show title and description.
+st.title("🐨 Womby")
 
 load_dotenv()
-openai_api_key = os.getenv('API_KEY')
+openai_api_key = os.getenv("API_KEY")
+
+
+# Función para agregar un nuevo mensaje y refrescar
+def add_message(role, content):
+    st.session_state.messages.append({"role": role, "content": content})
+    st.rerun()
+
+
+def add_message_without_rerun(role, content):
+    st.session_state.messages.append({"role": role, "content": content})
+
 
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
@@ -64,59 +71,79 @@ else:
 
     # Concatenar el prompt inicial con la pregunta seleccionada
     prompt_context = f"{instructions_prompt.strip()}\n\n"
-    template_user_answer = "Pregunta: {pregunta}\nRespuesta:{respuesta}"
+    template_user_answer = """
+    Pregunta: {pregunta}
+    Respuesta: {respuesta}
+    """
 
     # Create a session state variable to store the chat messages. This ensures that the
     # messages persist across reruns.
     if "messages" not in st.session_state:
-        st.session_state.messages = [{"role": "user", "content": prompt_context}]
+        st.session_state.messages = [
+            {"role": "user", "content": prompt_context},
+            {
+                "role": "assistant",
+                "content": f"Hola! Estaré esperando tu respuesta a tu pregunta.",
+            },
+        ]
 
     # Display the existing chat messages via `st.chat_message`.
     for message in st.session_state.messages[1:]:
-        with st.chat_message(message["role"]):
+        lnk_to_wombat = "https://attic.sh/xi1yhgxjqf1dvx5hxm98su4gzpal"
+        lnk_to_student = "https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/1f9d1-1f393.svg"
+        avatar = lnk_to_student if message["role"] == "user" else lnk_to_wombat
+        with st.chat_message(message["role"], avatar=avatar):
             st.markdown(message["content"])
 
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
+    # Variable para almacenar el texto transcrito
+    if "transcription" not in st.session_state:
+        st.session_state.transcription = ""
 
-        user_answer = template_user_answer.format(pregunta=pregunta, respuesta=prompt)
+    audio_input, text_input, send_answer = st.columns([0.8, 4, 0.6])
 
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": user_answer})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        # Mostrar los mensajes para depuración
-        messages_test = [
-            {"role": m["role"], "content": m["content"]}
-            for m in st.session_state.messages
-        ]
-
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
+    with audio_input:
+        # Entrada de audio
+        voice_response = st.experimental_audio_input(
+            "Voice input", label_visibility="collapsed"
         )
+        transcriptor = VoiceRecognition()
 
-        # Mostrar la respuesta del asistente
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
-    
-    # Entrada de audio
-    voice_response = st.experimental_audio_input("Grabar respuesta")
-    transcriptor = VoiceRecognition()
-    # Si hay respuesta de voz, se muestra la transcripción
-    if voice_response:
-        st.write("Transcripción:")
-        text = transcriptor.to_text(voice_response, client)
-        st.write(text)
+    with text_input:
+        # Si hay respuesta de voz, se muestra la transcripción
+        if voice_response:
+            text = transcriptor.to_text(voice_response, client)
+            st.session_state.transcription = text
+            user_input = st.text_area(
+                "Ingrese su respuesta",
+                st.session_state.transcription,
+                label_visibility="collapsed",
+            )
+        else:
+            user_input = st.text_area(
+                "Ingrese su respuesta", label_visibility="collapsed"
+            )
 
-        
+    with send_answer:
+        # Crear un botón para que el usuario confirme su mensaje antes de enviarlo
+        # Que el botón quede centrado verticalmente, o use todo el alto del contenedor
+        if st.button(
+            "✉️ Enviar respuesta", use_container_width=True, disabled=not user_input
+        ):
+            user_answer = template_user_answer.format(
+                pregunta=pregunta, respuesta=user_input
+            )
 
+            # Store and display the current prompt.
+            add_message_without_rerun("user", user_answer)
 
+            # Generate a response using the OpenAI API.
+            stream = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": m["role"], "content": m["content"]}
+                    for m in st.session_state.messages
+                ],
+                stream=False,
+            )
+            response = stream.choices[0].message.content
+            add_message("assistant", response)
