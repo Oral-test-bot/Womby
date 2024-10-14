@@ -41,6 +41,7 @@ class VoiceRecognition:
         """
         transcription = client.audio.transcriptions.create(
             file=wavefile,
-            model="whisper-1"
+            model="whisper-1",
+            language="en",
         )
         return transcription.text
