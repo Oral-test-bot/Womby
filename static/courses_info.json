@@ -1,10 +1,29 @@
 {
-    "Nivel 1": {
-        "unidad_1": ["¿Cómo te llamas?", "¿De dónde eres?"],
-        "unidad_2": ["¿Qué edad tienes?", "¿Qué te gusta hacer?"]
-    },
-    "Nivel 2": {
-        "unidad_1": ["Describe tu rutina diaria.", "¿Qué haces los fines de semana?"],
-        "unidad_2": ["Háblame de tu familia.", "¿Qué trabajo te gustaría tener?"]
+    "4205": {
+        "1/5A": [
+            "What do you think has been the worst disaster caused by humankind in history? Why?", 
+            "What would you have done if you had been there?",
+            "What are the most important tips to follow when disasters strike?"
+        ],
+        "2/6B": [
+            "How much do you sleep? What are you used to doing before going to bed? What has been your worst sleeping habit so far?", 
+            "Have you changed your sleep habits a lot? Did you use to have the same habits when you were a child? Why?",
+            "What would your parents have done if you had suffered from a sleep disorder when you were a kid?"
+        ],
+        "3/7A": [
+            "What do friends usually argue about? Have you ever had an intense argument with a friend? What happened?",
+            "What would you have done if that person had reacted badly?",
+            "How would you avoid a situation like that? Are there any tips to consider at the moment of arguing with friends?"
+        ],
+        "4/8B": [
+            "How do you usually find out about the latest news? Why do you prefer that way and not others?",
+            "Which newspapers, TV channels or radio stations in Chile do you think are the most reliable and the most biased? Support your point of view.",
+            "If you had had access to relevant details about chat GPT and its impact on society before its release (e.g. fear of job losses, privacy and the potential to circulate misleading information), what would you have done with this information?"
+        ],
+        "5/10B": [
+            "What has been the most inspirational speech you have ever listened to? Why was it so inspiring?",
+            "Do words and the way they are spoken have the same relevance when giving a speech? Why?",
+            "Politicians and public figures are often criticized for making mistakes when giving speeches. If you had been given the chance to help one of these people, what would you have suggested doing?"
+        ]
     }
 }
