@@ -61,6 +61,8 @@ with st.sidebar:
     preguntas = cursos_data[nivel][unidad]
     pregunta = st.selectbox("Selecciona una pregunta", preguntas)
 
+    st.write(f"**Pregunta seleccionada:** {pregunta}")
+
     # Añadir un botón para enviar los mensajes por correo
     if st.button("Enviar historial por correo"):
         # Concatenar los mensajes
@@ -107,7 +109,7 @@ if "messages" not in st.session_state:
         {"role": "user", "content": prompt_context},
         {
             "role": "assistant",
-            "content": f"Hola! Estaré esperando tu respuesta a tu pregunta.",
+            "content": "Hola! Estaré esperando tu respuesta a tu pregunta.",
         },
     ]
 
@@ -122,34 +124,40 @@ for message in st.session_state.messages[1:]:
 # Variable para almacenar el texto transcrito
 if "transcription" not in st.session_state:
     st.session_state.transcription = ""
+if "voice_response" not in st.session_state:
+    st.session_state.voice_response = ""
+
+if pregunta:
+    st.write(f"**Pregunta seleccionada:** {pregunta}")
 
 audio_input, text_input, send_answer = st.columns([0.8, 4, 0.6])
 
 with audio_input:
     # Entrada de audio
-    voice_response = st.experimental_audio_input(
+    st.session_state.voice_response = st.experimental_audio_input(
         "Voice input", label_visibility="collapsed"
     )
-    transcriptor = VoiceRecognition()
+
 
 with text_input:
     # Si hay respuesta de voz, se muestra la transcripción
-    if voice_response:
-        text = transcriptor.to_text(voice_response, client)
-        st.session_state.transcription = text
-        user_input = st.text_area(
-            "Ingrese su respuesta",
-            st.session_state.transcription,
-            label_visibility="collapsed",
+    if st.session_state.voice_response:
+        transcriptor = VoiceRecognition()
+        st.session_state.transcription = transcriptor.to_text(
+            st.session_state.voice_response, client
         )
-    else:
-        user_input = st.text_area("Ingrese su respuesta", label_visibility="collapsed")
+
+    user_input = st.text_area(
+        label="Text input",
+        value=st.session_state.transcription,
+        label_visibility="collapsed",
+    )
 
 with send_answer:
     # Crear un botón para que el usuario confirme su mensaje antes de enviarlo
     # Que el botón quede centrado verticalmente, o use todo el alto del contenedor
     if st.button(
-        "✉️ Enviar respuesta", use_container_width=True, disabled=not user_input
+        "✉️ Enviar", use_container_width=True, disabled=not user_input
     ):
         user_answer = template_user_answer.format(
             pregunta=pregunta, respuesta=user_input
@@ -160,7 +168,7 @@ with send_answer:
 
         # Generate a response using the OpenAI API.
         stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {"role": m["role"], "content": m["content"]}
                 for m in st.session_state.messages
