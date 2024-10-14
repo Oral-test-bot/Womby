@@ -4,6 +4,7 @@ from constants import PROMPTS_PATH, COURSES_INFO_PATH
 import json
 import os
 from VoiceRecognition import VoiceRecognition
+from chat_email import send_email
 
 st.set_page_config(
     page_title="Womby",
@@ -13,7 +14,7 @@ st.set_page_config(
 )
 
 # Show title and description.
-st.title("🐨 Womby")
+st.title("Womby")
 
 
 # Función para agregar un nuevo mensaje y refrescar
@@ -59,6 +60,38 @@ with st.sidebar:
     # Filtrar las preguntas según la unidad seleccionada
     preguntas = cursos_data[nivel][unidad]
     pregunta = st.selectbox("Selecciona una pregunta", preguntas)
+
+    # Añadir un botón para enviar los mensajes por correo
+    if st.button("Enviar historial por correo"):
+        # Concatenar los mensajes
+        messages_to_send = st.session_state.messages[2:]
+        messages_history = "\n".join(
+            [f"{m['role']}: {m['content']}" for m in messages_to_send]
+        )
+
+        # Configura los detalles del correo
+        subject = "Historial de Mensajes Womby"
+        body = messages_history
+        to_email = st.secrets["EMAIL_RECIPIENT"]
+        from_email = st.secrets["SMTP_USER"]
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+        smtp_user = st.secrets["SMTP_USER"]
+        smtp_password = st.secrets["SMTP_PASSWORD"]
+        try:
+            send_email(
+                subject,
+                body,
+                to_email,
+                from_email,
+                smtp_server,
+                smtp_port,
+                smtp_user,
+                smtp_password,
+            )
+            st.success("Correo enviado exitosamente!")
+        except Exception as e:
+            st.error(f"Error al enviar el correo: {e}")
 
 # Concatenar el prompt inicial con la pregunta seleccionada
 prompt_context = f"{instructions_prompt.strip()}\n\n"
@@ -110,9 +143,7 @@ with text_input:
             label_visibility="collapsed",
         )
     else:
-        user_input = st.text_area(
-            "Ingrese su respuesta", label_visibility="collapsed"
-        )
+        user_input = st.text_area("Ingrese su respuesta", label_visibility="collapsed")
 
 with send_answer:
     # Crear un botón para que el usuario confirme su mensaje antes de enviarlo
