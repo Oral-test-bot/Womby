@@ -115,7 +115,7 @@ if "messages" not in st.session_state:
         {"role": "user", "content": prompt_context},
         {
             "role": "assistant",
-            "content": "Hola! Estaré esperando tu respuesta a tu pregunta.",
+            "content": "Hi Beauchefian! I'm happy you are here to practice with me. Answer the next question and get ready to improve your English.",
         },
     ]
 
