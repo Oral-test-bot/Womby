@@ -65,8 +65,6 @@ with st.sidebar:
     # Reemplazamos el vocabulario en el prompt
     instructions_prompt = instructions_prompt.replace("<VOCABULARY>", vocabulario)
 
-    print("Instrucciones:\n", instructions_prompt)
-
     st.write(f"**Pregunta seleccionada:** {pregunta}")
 
     # Añadir un botón para enviar los mensajes por correo
