@@ -35,9 +35,7 @@ prompt_files = os.listdir(PROMPTS_PATH)
 
 # Cargar el contenido de los prompts y mostrarlo en la barra lateral
 with st.sidebar:
-    prompt_choice = st.selectbox(
-        "Selecciona un prompt inicial", prompt_files, index=0
-    )
+    prompt_choice = st.selectbox("Selecciona un prompt inicial", prompt_files, index=0)
 
     # Abrir el archivo con codificación UTF-8
     with open(
@@ -58,8 +56,16 @@ with st.sidebar:
     unidad = st.selectbox("Selecciona tu unidad", unidades)
 
     # Filtrar las preguntas según la unidad seleccionada
-    preguntas = cursos_data[nivel][unidad]
+    preguntas = cursos_data[nivel][unidad]["questions"]
     pregunta = st.selectbox("Selecciona una pregunta", preguntas)
+
+    # Filtramos el vocabulario según la unidad seleccionada
+    vocabulario = cursos_data[nivel][unidad]["vocabulary"]
+
+    # Reemplazamos el vocabulario en el prompt
+    instructions_prompt = instructions_prompt.replace("<VOCABULARY>", vocabulario)
+
+    print("Instrucciones:\n", instructions_prompt)
 
     st.write(f"**Pregunta seleccionada:** {pregunta}")
 
@@ -156,9 +162,7 @@ with text_input:
 with send_answer:
     # Crear un botón para que el usuario confirme su mensaje antes de enviarlo
     # Que el botón quede centrado verticalmente, o use todo el alto del contenedor
-    if st.button(
-        "✉️ Enviar", use_container_width=True, disabled=not user_input
-    ):
+    if st.button("✉️ Enviar", use_container_width=True, disabled=not user_input):
         user_answer = template_user_answer.format(
             pregunta=pregunta, respuesta=user_input
         )

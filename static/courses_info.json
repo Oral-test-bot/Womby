@@ -1,29 +1,44 @@
 {
     "4205": {
-        "1/5A": [
-            "What do you think has been the worst disaster caused by humankind in history? Why?", 
-            "What would you have done if you had been there?",
-            "What are the most important tips to follow when disasters strike?"
-        ],
-        "2/6B": [
-            "How much do you sleep? What are you used to doing before going to bed? What has been your worst sleeping habit so far?", 
-            "Have you changed your sleep habits a lot? Did you use to have the same habits when you were a child? Why?",
-            "What would your parents have done if you had suffered from a sleep disorder when you were a kid?"
-        ],
-        "3/7A": [
-            "What do friends usually argue about? Have you ever had an intense argument with a friend? What happened?",
-            "What would you have done if that person had reacted badly?",
-            "How would you avoid a situation like that? Are there any tips to consider at the moment of arguing with friends?"
-        ],
-        "4/8B": [
-            "How do you usually find out about the latest news? Why do you prefer that way and not others?",
-            "Which newspapers, TV channels or radio stations in Chile do you think are the most reliable and the most biased? Support your point of view.",
-            "If you had had access to relevant details about chat GPT and its impact on society before its release (e.g. fear of job losses, privacy and the potential to circulate misleading information), what would you have done with this information?"
-        ],
-        "5/10B": [
-            "What has been the most inspirational speech you have ever listened to? Why was it so inspiring?",
-            "Do words and the way they are spoken have the same relevance when giving a speech? Why?",
-            "Politicians and public figures are often criticized for making mistakes when giving speeches. If you had been given the chance to help one of these people, what would you have suggested doing?"
-        ]
+        "1/5A": {
+            "questions": [
+                "What do you think has been the worst disaster caused by humankind in history? Why?", 
+                "What would you have done if you had been there?",
+                "What are the most important tips to follow when disasters strike?"
+            ],
+            "vocabulary": "astonished /avalanche / to be scared stiff/to be sick and tired of/ bewildered/to bury/to confront / coolly / to deal with / delighted/ to despair/ desperate/ devastated/ to face/ to freeze / to get out/ horrified/ injured/ to overcome/overwhelmed/ to panic/ relieved/ safety/ scream/ still/ stunned/ upset / to whisper/"
+        },
+        "2/6B": {
+            "questions": [
+                "How much do you sleep? What are you used to doing before going to bed? What has been your worst sleeping habit so far?", 
+                "Have you changed your sleep habits a lot? Did you use to have the same habits when you were a child? Why?",
+                "What would your parents have done if you had suffered from a sleep disorder when you were a kid?"
+            ],
+            "vocabulary": "aware / fast asleep / to fall asleep / jet lag /lucid/ nap/ nightfall / nightmare / to oversleep/ recurring / to sleep like a log / to snore/ to stay up/ syndrome/ to wander / to yawn / to wonder / insomnia/sleepwalker/ sleeping pills / light sleeper/siesta / dream /"
+        },
+        "3/7A": {
+            "questions":[
+                "What do friends usually argue about? Have you ever had an intense argument with a friend? What happened?",
+                "What would you have done if that person had reacted badly?",
+                "How would you avoid a situation like that? Are there any tips to consider at the moment of arguing with friends?"
+            ],
+            "vocabulary": "to argue / argument/ to deal with something/ to bring up / upset/ realize / to notice/ to rise/ to raise/ to avoid/ to prevent/ to discuss / to remember/ to remind/ to hope/ to wish/ to expect/ to wait/ to mind/ to matter/ to steal / to rob/ to look/ to seem/ to beat / to win/ to refuse/ te deny/ to lay/ to lie/ to advise/ to warn/ advice /to keep things under control/to lose your temper/ to reach an agreement/ to stick to the point/ To be easier said than done"
+        },
+        "4/8B": {
+            "questions": [
+                "How do you usually find out about the latest news? Why do you prefer that way and not others?",
+                "Which newspapers, TV channels or radio stations in Chile do you think are the most reliable and the most biased? Support your point of view.",
+                "If you had had access to relevant details about chat GPT and its impact on society before its release (e.g. fear of job losses, privacy and the potential to circulate misleading information), what would you have done with this information?"
+            ],
+            "vocabulary":"accurate/ to apologize/ biased/ to blame/ censorship/ can’t stand/ classified ad/ commentator/ critic/ to dial/ to encourage/ to hack/ headline/ host/ issue/ issue/ to listen in/ newscaster/ to regret/ reliable/ review/ to threaten/ unanimously/ journalist/ freelance/ anchor man-woman/ news/ reporter/ editor/ the media"
+        },
+        "5/10B": {
+            "questions": [
+                "What has been the most inspirational speech you have ever listened to? Why was it so inspiring?",
+                "Do words and the way they are spoken have the same relevance when giving a speech? Why?",
+                "Politicians and public figures are often criticized for making mistakes when giving speeches. If you had been given the chance to help one of these people, what would you have suggested doing?"
+            ],
+            "vocabulary": "to be at death’s door/beforehand/ to cherish/ controversy/ creed/ cynic/dissonant/ halfway through/ to go on/ hunger strike/ if needs be/ lawsuit/ leap/ mankind/ release/ sacred/ to stand/ to starve/ strike/ to sum up/ to surrender/ trial/ to give a speech/ to present/ speaker/ a means/ eye contact/ confident/distracting/ plenty of time/ audience/ appropriate/ to intend/"
+        }
     }
 }
