@@ -142,11 +142,9 @@ with audio_input:
         "Voice input", label_visibility="collapsed"
     )
 
-retry_transcription = st.button("Reintentar transcripción")
-
 with text_input:
     # Si hay respuesta de voz, se muestra la transcripción
-    if st.session_state.voice_response or retry_transcription:
+    if st.session_state.voice_response:
         transcriptor = VoiceRecognition()
         st.session_state.transcription = transcriptor.to_text(
             st.session_state.voice_response, client
