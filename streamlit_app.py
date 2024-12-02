@@ -41,7 +41,7 @@ with st.sidebar:
     with open(
         os.path.join(PROMPTS_PATH, prompt_choice), "r", encoding="utf-8"
     ) as prompt_file:
-        instructions_prompt = prompt_file.read()
+        instructions_prompt: str = prompt_file.read()
 
     # Cargar JSON de los niveles, unidades y preguntas
     with open(COURSES_INFO_PATH, "r", encoding="utf-8") as courses_info_file:
@@ -110,7 +110,6 @@ Respuesta: {respuesta}
 # messages persist across reruns.
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "user", "content": prompt_context},
         {
             "role": "assistant",
             "content": "Hi Beauchefian! I'm happy you are here to practice with me. Answer the next question and get ready to improve your English.",
@@ -118,12 +117,27 @@ if "messages" not in st.session_state:
     ]
 
 # Display the existing chat messages via `st.chat_message`.
-for message in st.session_state.messages[1:]:
-    lnk_to_wombat = "https://attic.sh/xi1yhgxjqf1dvx5hxm98su4gzpal"
-    lnk_to_student = "https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/1f9d1-1f393.svg"
-    avatar = lnk_to_student if message["role"] == "user" else lnk_to_wombat
-    with st.chat_message(message["role"], avatar=avatar):
-        st.markdown(message["content"])
+for message in st.session_state.messages:
+    if message["role"] != "system":
+        lnk_to_wombat = "https://attic.sh/xi1yhgxjqf1dvx5hxm98su4gzpal"
+        lnk_to_student = "https://images.emojiterra.com/google/noto-emoji/unicode-16.0/color/svg/1f9d1-1f393.svg"
+        avatar = lnk_to_student if message["role"] == "user" else lnk_to_wombat
+        if message["role"] == "user":
+            try:
+                question = (
+                    message["content"].split("Pregunta: ")[1].split("Respuesta: ")[0]
+                )
+                answer = message["content"].split("Respuesta: ")[1]
+                with st.chat_message("assistant", avatar=lnk_to_wombat):
+                    st.markdown(f"{question}")
+                with st.chat_message("user", avatar=lnk_to_student):
+                    st.markdown(f"{answer}")
+            except:
+                with st.chat_message(message["role"], avatar=avatar):
+                    st.markdown(message["content"])
+        else:
+            with st.chat_message(message["role"], avatar=avatar):
+                st.markdown(message["content"])
 
 # Variable para almacenar el texto transcrito
 if "transcription" not in st.session_state:
@@ -160,6 +174,9 @@ with send_answer:
     # Crear un botón para que el usuario confirme su mensaje antes de enviarlo
     # Que el botón quede centrado verticalmente, o use todo el alto del contenedor
     if st.button("✉️ Enviar", use_container_width=True, disabled=not user_input):
+        # Use actual prompt
+        add_message_without_rerun("system", prompt_context)
+
         user_answer = template_user_answer.format(
             pregunta=pregunta, respuesta=user_input
         )
