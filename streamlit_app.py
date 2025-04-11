@@ -159,10 +159,13 @@ with audio_input:
 with text_input:
     # Si hay respuesta de voz, se muestra la transcripción
     if st.session_state.voice_response:
-        transcriptor = VoiceRecognition()
-        st.session_state.transcription = transcriptor.to_text(
-            st.session_state.voice_response, client
-        )
+        # Solo transcribir si no se ha transcrito este audio antes
+        if 'last_audio_timestamp' not in st.session_state or st.session_state.voice_response != st.session_state.last_audio:
+            transcriptor = VoiceRecognition()
+            st.session_state.transcription = transcriptor.to_text(
+                st.session_state.voice_response, client
+            )
+            st.session_state.last_audio = st.session_state.voice_response
 
     user_input = st.text_area(
         label="Text input",
